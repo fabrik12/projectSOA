@@ -150,12 +150,31 @@ class PostgreSQLService:
 
 if __name__ == "__main__":
     db_service = PostgreSQLService()
-    # Prueba obtener producto por ID
-    prod_existente = db_service.obtener_producto_db_por_id("P001")
-    print("\nResultado para P001:", prod_existente)
+    
+    # Probar crear producto
+    print("\n--- Probando Crear Producto ---")
+    new_product = db_service.crear_producto("P004", "Monitor Curvo", "Monitor ultrawide 34 pulgadas", "Monitores", 450.00)
+    print(new_product)
+    new_product2 = db_service.crear_producto("P001", "Laptop Gamer Duplicada", "Esto debería fallar", "Laptops", 100.00)
+    print(new_product2) # Debería dar error de duplicado
 
-    # Prueba obtener producto por ID inexistente
-    prod_inexistente = db_service.obtener_producto_db_por_id("P999")
-    print("\nResultado para P999:", prod_inexistente)
+    # Probar obtener producto
+    print("\n--- Probando Obtener Producto ---")
+    prod_existente = db_service.obtener_producto_db_por_id("P004")
+    print(prod_existente)
+
+    # Probar actualizar producto
+    print("\n--- Probando Actualizar Producto ---")
+    update_result = db_service.actualizar_producto("P004", precio=499.99, categoria="Pantallas")
+    print(update_result)
+    updated_prod = db_service.obtener_producto_db_por_id("P004")
+    print(updated_prod)
+
+    # Probar eliminar producto
+    print("\n--- Probando Eliminar Producto ---")
+    delete_result = db_service.eliminar_producto("P004")
+    print(delete_result)
+    deleted_prod = db_service.obtener_producto_db_por_id("P004")
+    print(deleted_prod) # Debería decir que no se encontró
 
     db_service._close_connection()  # Cerrar la conexión al final
