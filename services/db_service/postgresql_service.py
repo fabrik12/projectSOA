@@ -1,5 +1,6 @@
 # service/postgresql_service.py
 
+from decimal import Decimal
 import psycopg2
 
 import sys
@@ -38,7 +39,7 @@ class PostgreSQLService:
         
         try:
             with conn.cursor() as cursor:
-                cursor.execute("SELECT id, nombre, descripcion, precio FROM productos WHERE id = %s", (product_id,))
+                cursor.execute("SELECT id, nombre, descripcion, categoria, precio FROM productos WHERE id = %s", (product_id,))
                 producto = cursor.fetchone()
 
                 if producto:
@@ -54,6 +55,97 @@ class PostgreSQLService:
         finally:
             # Opcionalmente cerrar la conexión
             #self._close_connection()
+            pass
+
+    def crear_producto(self, id, nombre, descripcion, categoria, precio):
+        """
+        Insertar un nuevo producto en la tabla de PostgreSQL
+        """
+        conn = self._get_connection()
+        if not conn:
+            return {"status": "error", "message": "No se pudo establecer la conexión a la base de datos."}
+        
+        try:
+            with conn.cursor() as cur:
+                cur.execute(
+                    "INSERT INTO productos (id, nombre, descripcion, categoria, precio) VALUES (%s, %s, %s, %s, %s);",
+                    (id, nombre, descripcion, categoria, Decimal(str(precio))) # Asegura que el precio sea Decimal
+                )
+                conn.commit() # Confirmar la transacción
+                return {"status": "success", "message": f"Producto {nombre} (ID: {id}) creado exitosamente."}
+        except psycopg2.IntegrityError as e: # Manejar error de clave duplicada
+            conn.rollback()
+            return {"status": "error", "message": f"Error de integridad: El producto con ID {id} ya existe. {e}"}
+        except psycopg2.Error as e:
+            conn.rollback()
+            return {"status": "error", "message": f"Error al crear producto: {e}"}
+        finally:
+            pass
+    
+    def actualizar_producto(self, id, nombre=None, descripcion=None, categoria=None, precio=None):
+        """
+        Actualiza los detalles de un producto existente en la base de datos
+        Se permite una actualizacion parcial
+        """
+        conn = self._get_connection()
+        if not conn:
+            return {"status": "error", "message": "No se pudo establecer la conexión a la base de datos."}
+        
+        updates = []
+        params = []
+        if nombre is not None:
+            updates.append("nombre = %s")
+            params.append(nombre)
+        if descripcion is not None:
+            updates.append("descripcion = %s")
+            params.append(descripcion)
+        if categoria is not None:
+            updates.append("categoria = %s")
+            params.append(categoria)
+        if precio is not None:
+            updates.append("precio = %s")
+            params.append(Decimal(str(precio)))
+
+        if not updates:
+            return {"status": "error", "messages": "No se proporcionaron campos para actualizar"}
+        
+        params.append(id) # ID al final de WHERE
+        query = f"UPDATE productos SET {', '.join(updates)} WHERE id = %s;"
+
+        try:
+            with conn.cursor() as cur:
+                cur.execute(query, tuple(params))
+                if cur.rowcount == 0:
+                    conn.rollback()
+                    return {"status": "error", "message": f"Producto con ID {id} no encontrado para actualizar"}
+                conn.commit()
+                return {"status": "success", "message": f"Producto con ID {id} actualizado exitosamente."}
+        except psycopg2.Error as e:
+            conn.rollback()
+            return{"status": "error", "message": f"Error al actualizar producto: {e}"}
+        finally:
+            pass
+    
+    def eliminar_producto(self, id):
+        """
+        Elimina un producto de la base de datos por su ID.
+        """
+        conn = self._get_connection()
+        if not conn:
+            return {"status": "error", "message": "No se pudo conectar a la base de datos."}
+
+        try:
+            with conn.cursor() as cur:
+                cur.execute("DELETE FROM productos WHERE id = %s;", (id,))
+                if cur.rowcount == 0:
+                    conn.rollback()
+                    return {"status": "error", "message": f"Producto con ID {id} no encontrado para eliminar."}
+                conn.commit()
+                return {"status": "success", "message": f"Producto con ID {id} eliminado exitosamente."}
+        except psycopg2.Error as e:
+            conn.rollback()
+            return {"status": "error", "message": f"Error al eliminar producto: {e}"}
+        finally:
             pass
 
 if __name__ == "__main__":
