@@ -80,6 +80,9 @@ class CatalogoXLSService:
         try:
             df = self._cargar_catalogo()
             productos = df.to_dict(orient='records')
+
+            #print(f"Productos disponibles:\n {productos}")
+
             return {"status": "success", "productos": productos}
         except Exception as e:
             return {"status": "error", "message": str(e)}
@@ -91,6 +94,9 @@ class CatalogoXLSService:
         try:
             df = self._cargar_catalogo()
             productos = df[df['ProductName'].str.contains(nombre_parcial, case=False, na=False)]
+
+            #print(f"Productos encontrados con el nombre {nombre_parcial}: {productos}")
+
             if productos.empty:
                 return {"status": "success", "productos": []}
             return {"status": "success", "productos": productos.to_dict(orient='records')}
