@@ -1,7 +1,7 @@
 # messaging_service/messaging_service.py
 
 from microesb import microesb
-from rabbitmq_service import RabbitMQService # Importar implementacion del servicio
+from .rabbitmq_service import RabbitMQService # Importar implementacion del servicio
 
 class MessagingService(microesb.ClassHandler):
     def __init__(self):

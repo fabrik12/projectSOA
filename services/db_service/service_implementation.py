@@ -1,6 +1,6 @@
 # service_implementation.py
 from microesb import microesb
-from postgresql_service import PostgreSQLService
+from .postgresql_service import PostgreSQLService
 
 class Product(microesb.ClassHandler):
     def __init__(self):

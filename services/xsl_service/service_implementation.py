@@ -1,7 +1,7 @@
 # services/excel_catalogo_handler.py (Nuevo archivo)
 import json
 from microesb import microesb
-from xsl_service import CatalogoXLSService # Asegúrate de que esta ruta sea correcta
+from .xsl_service import CatalogoXLSService # Asegúrate de que esta ruta sea correcta
 
 class ExcelCatalogoHandler(microesb.ClassHandler):
     def __init__(self):

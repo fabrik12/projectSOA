@@ -42,12 +42,13 @@ class CatalogoXLSService:
     """
     Servicio para interactuar con el catálogo de productos en un archivo Excel.
     """
-    def __init__(self, filename="catalogo.xls", data_dir="data", hoja="Productos"):
-        base_dir = os.path.dirname(os.path.abspath(__file__))
-        self.data_dir = os.path.join(os.path.dirname(base_dir), data_dir)
-        self.filename = filename
+    def __init__(self, filename="catalog.xls", data_dir="data", hoja="Productos"):
+        # Usa la ruta absoluta desde la raíz del proyecto
+        self.filepath = os.path.abspath(os.path.join(
+            os.path.dirname(__file__), "..", "..", data_dir, filename
+        ))
         self.hoja = hoja
-        self.filepath = os.path.join(self.data_dir, self.filename)
+        #print(f"Buscando archivo en: {self.filepath}")
         print(f"CatalogoXLSService inicializado. Archivo: {self.filepath}")
 
     def _cargar_catalogo(self):
