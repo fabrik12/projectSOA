@@ -31,3 +31,9 @@ service_properties_xls = {
         'methods': ['get_by_id', 'list_all', 'search_by_name']
     }
 }
+
+ALL_SERVICE_PROPERTIES = {
+    'Product': service_properties_product,
+    'MessagingService': service_properties_messaging,
+    'ExcelCatalogoHandler': service_properties_xls
+}

@@ -17,3 +17,11 @@ class_reference_xls = {
         'children': {}
     }
 }
+
+# Puedes mantener un diccionario consolidado para fácil acceso si quieres,
+# pero el ClassMapper se creará con uno de los individuales.
+ALL_CLASS_REFERENCES = {
+    'Product': class_reference_product,
+    'MessagingService': class_reference_messaging,
+    'ExcelCatalogoHandler': class_reference_xls
+}

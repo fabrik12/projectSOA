@@ -8,3 +8,9 @@ class_mapping_messaging = {
 class_mapping_xls = {
     'ExcelCatalogoHandler': 'ExcelCatalogoHandler'
 }
+
+ALL_CLASS_MAPPINGS = {
+    'Product': class_mapping_product,
+    'MessagingService': class_mapping_messaging,
+    'ExcelCatalogoHandler': class_mapping_xls
+}
