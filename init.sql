@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS productos (
     precio DECIMAL(10, 2) NOT NULL
 );
 
+-- Opcional: Insertar algunos datos de ejemplo para probar
 INSERT INTO productos (id, nombre, descripcion, categoria, precio) VALUES
 ('P001', 'Laptop Gamer', 'Potente laptop para juegos', 'Laptops',1500.00),
 ('P002', 'Teclado Mecánico', 'Teclado RGB con switches azules', 'Periferico',80.50),

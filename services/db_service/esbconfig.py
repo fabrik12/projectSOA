@@ -1,0 +1,6 @@
+# esbconfig.py
+import_classes = {
+    'service_implementation': [
+        'Product'
+    ]
+}
