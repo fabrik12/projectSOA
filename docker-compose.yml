@@ -14,6 +14,28 @@ services:
       - db_data:/var/lib/postgresql/data # Persiste los datos de la base de datos
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql # Ejecuta scripts SQL al iniciar el contenedor
     restart: always # Asegura que el contenedor se reinicie si falla
-
+  # --- Nuevo servicio para tu aplicación Flask ---
+  app:
+    build: 
+      context: ./serviceXSL # Dockerfile se buscará en el directorio actual (PROJECTSOA)
+      dockerfile: Dockerfile #Si Dockerfile está en la raíz de PROJECTSOA
+    container_name: esb_flask_app
+    ports:
+      - "5400:5400" # Mapea el puerto 5400 de tu máquina al puerto 5400 del contenedor (puedes elegir otro puerto)
+    environment:
+      # Pasa las variables de entorno para la conexión a la DB a tu app Flask
+      DATABASE_URL: postgresql://esb_user:esb_password@db:5432/esb_catalogo_db
+      FLASK_APP: app.py # Le dice a Flask dónde encontrar tu aplicación
+      FLASK_ENV: development # Modo desarrollo (cambiar a production en prod)
+    depends_on:
+      - db # Asegura que la DB se inicie antes que la app Flask
+    volumes:
+      # Monta la carpeta serviceXSL/ del host en /app del contenedor.
+      # Esto hace que app.py, services/, y el Dockerfile estén disponibles en /app.
+      - ./serviceXSL:/app
+      # Monta la carpeta 'data' de la raíz del proyecto del host
+      # en /app/data del contenedor. Así XLStoJSONConverter puede encontrarla.
+      - ./data:/app/data
+    restart: always
 volumes:
   db_data:
