@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS productos (
 );
 
 -- Opcional: Insertar algunos datos de ejemplo para probar
-INSERT INTO productos (id, nombre, descripcion, categoria, precio, stock) VALUES
+INSERT INTO productos (id, nombre, descripcion, categoria, precio) VALUES
 ('P001', 'Laptop Gamer', 'Potente laptop para juegos', 'Laptops',1500.00),
 ('P002', 'Teclado Mecánico', 'Teclado RGB con switches azules', 'Periferico',80.50),
 ('P003', 'Mouse Inalámbrico', 'Mouse ergonómico para oficina', 'Periferico',35.00)
