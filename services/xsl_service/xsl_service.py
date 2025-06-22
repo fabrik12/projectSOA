@@ -66,7 +66,7 @@ class CatalogoXLSService:
         """
         try:
             df = self._cargar_catalogo()
-            producto = df[df['id'] == product_id]
+            producto = df[df['ProductID'] == product_id]
             if producto.empty:
                 return {"status": "error", "message": f"Producto con id '{product_id}' no encontrado."}
             return {"status": "success", "producto": producto.iloc[0].to_dict()}
@@ -90,7 +90,7 @@ class CatalogoXLSService:
         """
         try:
             df = self._cargar_catalogo()
-            productos = df[df['nombre'].str.contains(nombre_parcial, case=False, na=False)]
+            productos = df[df['ProductName'].str.contains(nombre_parcial, case=False, na=False)]
             if productos.empty:
                 return {"status": "success", "productos": []}
             return {"status": "success", "productos": productos.to_dict(orient='records')}
@@ -99,13 +99,13 @@ class CatalogoXLSService:
 
 if __name__ == "__main__":
     # Pruebas rápidas
-    catalogo = CatalogoXLSService(filename="catalogo.xls", data_dir="data", hoja="Productos")
+    catalogo = CatalogoXLSService(filename="catalog.xls", data_dir="data", hoja="Catalog")
 
     print("\n--- Listar todos los productos ---")
     print(json.dumps(catalogo.listar_todos_productos(), indent=2, ensure_ascii=False))
 
     print("\n--- Obtener producto por ID ---")
-    print(json.dumps(catalogo.obtener_producto_por_id(product_id=1), indent=2, ensure_ascii=False))
+    print(json.dumps(catalogo.obtener_producto_por_id(product_id='EL001'), indent=2, ensure_ascii=False))
 
     print("\n--- Buscar productos por nombre ---")
-    print(json.dumps(catalogo.buscar_productos_por_nombre(nombre_parcial="Laptop"), indent=2, ensure_ascii=False))
+    print(json.dumps(catalogo.buscar_productos_por_nombre(nombre_parcial="Cable"), indent=2, ensure_ascii=False))
